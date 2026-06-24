@@ -14,36 +14,14 @@ cd wb-parser
 pip install -r requirements.txt
 ```
 
-## Авторизация
-
-Нужны два cookie с сайта WB: `x_wbaas_token` и `_wbauid`. Передать любым способом:
-
-**Вариант 1 — файл `.env`** (рекомендуется)
-```
-WB_X_WBAAS_TOKEN=ваш_токен
-WB_WBAUID=ваш_uid
-```
-
-**Вариант 2 — `cookies.txt`**
-Экспортируйте cookies в формате Netscape через расширение EditThisCookie или `curl --cookie-jar`.
-
-**Вариант 3 — переменные окружения**
-```bash
-export WB_X_WBAAS_TOKEN=ваш_токен
-export WB_WBAUID=ваш_uid
-```
-
 ## Запуск
 
 ```bash
-# По ссылке на категорию
-python main.py https://www.wildberries.ru/catalog/muzhchinam/odezhda/bryuki-i-shorty
+# Запуск парсера с интерфейсом  
+python gui.py
 
-# По поисковому запросу
-python main.py --query "джинсы мужские" --target-count 500
-
-# С фильтром по цене
-python main.py URL --price-min 1000 --price-max 5000
+# Запуск парсера через терминал
+python main.py "ссылка" --target-count 500
 ```
 
 Результат сохраняется в `.xlsx` рядом с `main.py`.

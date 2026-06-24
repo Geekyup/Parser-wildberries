@@ -8,11 +8,12 @@ from urllib.parse import urlparse
 
 import requests
 
-from .config import ApiCredentials, WB_MENU_URL, WB_SEARCH_URL
-from .utils import normalize_url, parse_search_query_from_url
+from wb_parser.config import ApiCredentials, WB_MENU_URL, WB_SEARCH_URL
+from wb_parser.utils import normalize_url, parse_search_query_from_url
 
 
 def _make_query_id(wb_uid: str) -> str:
+    """Генерирует уникальный x-queryid для каждого запроса."""
     timestamp = datetime.now(UTC).strftime("%Y%m%d%H%M%S")
     return f"qid{wb_uid}{timestamp}"
 
@@ -27,6 +28,7 @@ def _build_params(
     price_min: int | None = None,
     price_max: int | None = None,
 ) -> dict[str, str]:
+    """Собирает query-параметры для запроса к WB search API."""
     params: dict[str, str] = {
         "ab_testing": "false",
         "appType": "1",
@@ -84,6 +86,7 @@ class WildberriesClient:
         params: dict[str, str],
         retries: int = 3,
     ) -> tuple[dict[str, Any], int]:
+        """Делает GET-запрос с повторными попытками. Возвращает (данные, кол-во_ретраев)."""
         last_error: Exception | None = None
         for attempt in range(1, retries + 1):
             try:
@@ -117,6 +120,7 @@ class WildberriesClient:
         price_min: int | None,
         price_max: int | None,
     ) -> tuple[list[dict[str, Any]], int]:
+        """Загружает одну страницу каталога. Возвращает (список_товаров, кол-во_ретраев)."""
         params = _build_params(
             query=query,
             resultset="catalog",
@@ -130,6 +134,7 @@ class WildberriesClient:
         return data.get("products") or [], retry_errors
 
     def fetch_price_bounds(self, *, query: str, dest: str) -> tuple[int, int]:
+        """Определяет минимальную и максимальную цену для запроса через фильтры WB."""
         params = _build_params(query=query, resultset="filters", dest=dest)
         data, _ = self._request_json(params=params)
 
@@ -140,6 +145,7 @@ class WildberriesClient:
             if isinstance(min_v, int) and isinstance(max_v, int):
                 return min_v, max_v
 
+        # Фильтры не дали цену — берём из первой страницы товаров
         products, _ = self.fetch_products_page(
             query=query, sort="popular", page=1, dest=dest,
             price_min=None, price_max=None,
@@ -162,6 +168,7 @@ class WildberriesClient:
         )
 
     def fetch_main_menu_tree(self) -> list[dict[str, Any]]:
+        """Загружает дерево меню WB для резолва query по URL категории."""
         response = self._session.get(WB_MENU_URL, timeout=self._timeout)
         response.raise_for_status()
         payload = response.json()
@@ -170,6 +177,7 @@ class WildberriesClient:
         raise RuntimeError("WB menu JSON вернул неожиданный формат.")
 
     def resolve_query_from_category_url(self, category_url: str) -> str:
+        """По ссылке на категорию определяет поисковый запрос через меню WB."""
         manual = parse_search_query_from_url(category_url)
         if manual:
             return manual
@@ -201,6 +209,7 @@ class WildberriesClient:
 
     @staticmethod
     def _iter_menu_nodes(nodes: list[dict[str, Any]]) -> Iterator[dict[str, Any]]:
+        """Обходит дерево меню в ширину."""
         queue = deque(nodes)
         while queue:
             node = queue.popleft()

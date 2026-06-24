@@ -1,15 +1,15 @@
 """
-Wildberries parser — CLI entry point.
+Wildberries Parser — запуск из командной строки.
 
-Usage:
+Примеры:
     python main.py https://www.wildberries.ru/catalog/muzhchinam/odezhda/bryuki-i-shorty
     python main.py --query "джинсы" --target-count 500
     python main.py URL --price-min 1000 --price-max 5000
 
-Credentials (any one method works):
-    1. cookies.txt  — Netscape cookie export (EditThisCookie / curl)
-    2. .env file    — WB_X_WBAAS_TOKEN=... and WB_WBAUID=...
-    3. env vars     — export WB_X_WBAAS_TOKEN=... WB_WBAUID=...
+Авторизация (любой из вариантов):
+    1. cookies.txt  — экспорт из EditThisCookie или curl
+    2. .env         — WB_X_WBAAS_TOKEN=... и WB_WBAUID=...
+    3. переменные окружения — export WB_X_WBAAS_TOKEN=... WB_WBAUID=...
 """
 from __future__ import annotations
 

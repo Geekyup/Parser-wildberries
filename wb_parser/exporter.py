@@ -5,11 +5,12 @@ from pathlib import Path
 from openpyxl import Workbook
 from openpyxl.styles import Font
 
-from .collector import ProductRow
-from .config import EXPORT_SCHEMA
+from wb_parser.collector import ProductRow
+from wb_parser.config import EXPORT_SCHEMA
 
 
 def save_excel(rows: list[ProductRow], output_path: Path) -> Path:
+    """Сохраняет список товаров в Excel с заголовками, фильтрами и автошириной колонок."""
     wb = Workbook()
     ws = wb.active
     ws.title = "WB Export"

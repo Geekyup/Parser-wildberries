@@ -2,26 +2,14 @@ from __future__ import annotations
 
 import os
 from dataclasses import dataclass
-from pathlib import Path
 
-# ---------------------------------------------------------------------------
-# API endpoints
-# ---------------------------------------------------------------------------
 
-WB_SEARCH_URL = (
-    "https://www.wildberries.ru/__internal/u-search/exactmatch/ru/common/v18/search"
-)
-WB_MENU_URL = (
-    "https://static-basket-01.wbbasket.ru/vol0/data/main-menu-ru-ru-v3.json"
-)
+# URL поиска и меню WB
+WB_SEARCH_URL = "https://www.wildberries.ru/__internal/u-search/exactmatch/ru/common/v18/search"
+WB_MENU_URL = "https://static-basket-01.wbbasket.ru/vol0/data/main-menu-ru-ru-v3.json"
 
-# ---------------------------------------------------------------------------
-# Defaults
-# ---------------------------------------------------------------------------
-
-DEFAULT_CATEGORY_URL = (
-    "https://www.wildberries.ru/catalog/muzhchinam/odezhda/bryuki-i-shorty"
-)
+# Дефолтные значения для настроек парсера
+DEFAULT_CATEGORY_URL = "https://www.wildberries.ru/catalog/muzhchinam/odezhda/bryuki-i-shorty"
 DEFAULT_DEST = "12358062"
 DEFAULT_SORTS = ("popular", "newly", "rate")
 DEFAULT_TARGET_COUNT = 1000
@@ -32,10 +20,7 @@ DEFAULT_MAX_DEPTH = 10
 DEFAULT_MIN_PRICE_SPAN = 500
 DEFAULT_SPLIT_THRESHOLD = 180
 
-# ---------------------------------------------------------------------------
-# Excel export column schema
-# ---------------------------------------------------------------------------
-
+# Колонки в итоговом Excel: (ключ_в_словаре, заголовок)
 EXPORT_SCHEMA: tuple[tuple[str, str], ...] = (
     ("name", "Название"),
     ("brand", "Бренд"),
@@ -47,9 +32,6 @@ EXPORT_SCHEMA: tuple[tuple[str, str], ...] = (
     ("link", "Ссылка на товар"),
 )
 
-# ---------------------------------------------------------------------------
-# Dataclasses
-# ---------------------------------------------------------------------------
 
 @dataclass(frozen=True, slots=True)
 class ApiCredentials:

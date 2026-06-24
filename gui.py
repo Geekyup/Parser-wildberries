@@ -1,8 +1,6 @@
 """
 Wildberries Parser — графический интерфейс.
-
-Запуск:
-    python gui.py
+Запуск: python gui.py
 """
 from __future__ import annotations
 
@@ -13,11 +11,10 @@ import threading
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 
-from wb_parser import ScrapingCancelled, run_scraping
+from wb_parser.scraper import ScrapingCancelled, run_scraping
 
 
 class WBParserApp:
-    """Главное окно приложения WB Parser."""
 
     def __init__(self, root: tk.Tk):
         self.root = root
@@ -32,27 +29,20 @@ class WBParserApp:
 
         self._build_ui()
 
-    # ------------------------------------------------------------------
-    # UI
-    # ------------------------------------------------------------------
-
     def _build_ui(self):
         pad = {"padx": 10, "pady": 6}
 
-        # Ссылка на категорию
         frm_url = ttk.LabelFrame(self.root, text="Ссылка на категорию Wildberries")
         frm_url.pack(fill="x", **pad)
         self.url_entry = ttk.Entry(frm_url, font=("Segoe UI", 10))
         self.url_entry.pack(fill="x", padx=8, pady=8)
         self.url_entry.insert(0, "https://www.wildberries.ru/catalog/...")
 
-        # Поисковый запрос (опционально)
         frm_query = ttk.LabelFrame(self.root, text="Поисковый запрос (опционально, заменяет автоопределение)")
         frm_query.pack(fill="x", **pad)
         self.query_entry = ttk.Entry(frm_query, font=("Segoe UI", 10))
         self.query_entry.pack(fill="x", padx=8, pady=8)
 
-        # Параметры
         frm_params = ttk.LabelFrame(self.root, text="Параметры")
         frm_params.pack(fill="x", **pad)
 
@@ -92,7 +82,6 @@ class WBParserApp:
         self.output_label.pack(side="left", padx=8)
         ttk.Button(row4, text="Выбрать...", command=self._choose_output).pack(side="right")
 
-        # Кнопки
         frm_actions = ttk.Frame(self.root)
         frm_actions.pack(fill="x", **pad)
         self.start_btn = ttk.Button(frm_actions, text="▶ Начать парсинг", command=self._on_start)
@@ -102,7 +91,6 @@ class WBParserApp:
         self.open_file_btn = ttk.Button(frm_actions, text="Открыть Excel", command=self._open_result, state="disabled")
         self.open_file_btn.pack(side="right")
 
-        # Прогресс
         frm_progress = ttk.Frame(self.root)
         frm_progress.pack(fill="x", **pad)
         self.progress = ttk.Progressbar(frm_progress, mode="determinate")
@@ -110,15 +98,10 @@ class WBParserApp:
         self.status_label = ttk.Label(frm_progress, text="Готов к запуску.")
         self.status_label.pack(anchor="w", pady=(4, 0))
 
-        # Лог
         frm_log = ttk.LabelFrame(self.root, text="Журнал")
         frm_log.pack(fill="both", expand=True, **pad)
         self.log_text = tk.Text(frm_log, height=8, state="disabled", wrap="word", font=("Consolas", 9))
         self.log_text.pack(fill="both", expand=True, padx=4, pady=4)
-
-    # ------------------------------------------------------------------
-    # Диалоги
-    # ------------------------------------------------------------------
 
     def _choose_cookies(self):
         path = filedialog.askopenfilename(
@@ -148,10 +131,6 @@ class WBParserApp:
                 subprocess.run(["open", self.output_path])
             else:
                 subprocess.run(["xdg-open", self.output_path])
-
-    # ------------------------------------------------------------------
-    # Запуск / остановка
-    # ------------------------------------------------------------------
 
     def _on_start(self):
         url = self.url_entry.get().strip()
@@ -209,10 +188,6 @@ class WBParserApp:
             self.root.after(0, self._on_cancelled)
         except Exception as e:
             self.root.after(0, self._on_error, str(e))
-
-    # ------------------------------------------------------------------
-    # UI helpers
-    # ------------------------------------------------------------------
 
     def _append_log(self, msg: str):
         self.log_text.config(state="normal")

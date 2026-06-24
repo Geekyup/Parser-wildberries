@@ -5,7 +5,7 @@ from pathlib import Path
 
 
 def parse_cookies_txt(cookies_path: str | Path = "cookies.txt") -> dict[str, str]:
-    """Parse Netscape HTTP Cookie File (curl / EditThisCookie export)."""
+    """Читает файл cookies в формате Netscape (экспорт из EditThisCookie или curl)."""
     path = Path(cookies_path)
     if not path.exists():
         return {}
@@ -21,7 +21,7 @@ def parse_cookies_txt(cookies_path: str | Path = "cookies.txt") -> dict[str, str
 
 
 def load_env_file(env_path: str | Path = ".env") -> None:
-    """Load key=value pairs from a .env file into os.environ (does not overwrite)."""
+    """Загружает переменные из .env файла в os.environ, не перезаписывая уже установленные."""
     path = Path(env_path)
     if not path.exists():
         return
@@ -34,7 +34,7 @@ def load_env_file(env_path: str | Path = ".env") -> None:
 
 
 def load_cookies_into_env(cookies_path: str | Path = "cookies.txt") -> None:
-    """Map known WB cookie names to env vars (does not overwrite existing values)."""
+    """Переносит нужные WB-куки из cookies.txt в переменные окружения."""
     cookie_map = {
         "x_wbaas_token": "WB_X_WBAAS_TOKEN",
         "X_WBAAS_TOKEN": "WB_X_WBAAS_TOKEN",

@@ -5,12 +5,14 @@ from urllib.parse import parse_qs, urlparse
 
 
 def normalize_url(url: str) -> str:
+    """Приводит URL к нижнему регистру и убирает trailing slash."""
     parsed = urlparse(url)
     clean_path = parsed.path.rstrip("/") or "/"
     return f"{parsed.scheme}://{parsed.netloc}{clean_path}".lower()
 
 
 def slugify(value: str) -> str:
+    """Превращает строку в безопасное имя файла."""
     text = value.strip().lower()
     text = re.sub(r"^https?://", "", text)
     text = re.sub(r"[^a-zа-я0-9]+", "_", text, flags=re.IGNORECASE)
@@ -19,6 +21,7 @@ def slugify(value: str) -> str:
 
 
 def parse_search_query_from_url(url: str) -> str | None:
+    """Достаёт поисковый запрос из параметров URL, если он там есть."""
     query_params = parse_qs(urlparse(url).query)
     for key in ("search", "query", "text"):
         values = query_params.get(key)
@@ -28,6 +31,7 @@ def parse_search_query_from_url(url: str) -> str | None:
 
 
 def format_elapsed(seconds: float) -> str:
+    """Форматирует секунды в MM:SS или HH:MM:SS."""
     total = max(0, int(seconds))
     hours, remainder = divmod(total, 3600)
     minutes, secs = divmod(remainder, 60)

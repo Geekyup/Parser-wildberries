@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+
+# Credentials — никогда не коммитить
+.env
+cookies.txt
+
+# Outputs
+*.xlsx
+
+# IDE
+.idea/
+.vscode/
+*.egg-info/
+dist/
+build/

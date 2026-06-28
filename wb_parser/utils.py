@@ -12,21 +12,16 @@ def normalize_url(url: str) -> str:
 
 
 def slugify(value: str) -> str:
-    """Превращает строку в безопасное имя файла."""
-    text = value.strip().lower()
-    text = re.sub(r"^https?://", "", text)
-    text = re.sub(r"[^a-zа-я0-9]+", "_", text, flags=re.IGNORECASE)
-    text = re.sub(r"_+", "_", text).strip("_")
-    return text or "wb_export"
+    text = re.sub(r"[^a-zа-я0-9]+", "_", value.strip().lower(), flags=re.IGNORECASE)
+    return text.strip("_") or "wb_export"
 
 
 def parse_search_query_from_url(url: str) -> str | None:
-    """Достаёт поисковый запрос из параметров URL, если он там есть."""
-    query_params = parse_qs(urlparse(url).query)
+    query_params = parse_qs(urlparse(url).query, keep_blank_values=False)
     for key in ("search", "query", "text"):
         values = query_params.get(key)
         if values and values[0].strip():
-            return values[0].strip()
+            return values[0].strip()  # вернёт "ps 5"
     return None
 
 
